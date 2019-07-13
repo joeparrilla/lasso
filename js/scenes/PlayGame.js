@@ -18,6 +18,7 @@ export class PlayGame extends Phaser.Scene {
 
         //text
         this.heldText = this.add.text(16, 16, `held: ${this.enemiesHeld.length}`, { fontSize: '32px', fill: '#FFF' });
+        this.timeRemainingText = this.add.text(300, 16, `Time:`, { fontSize: '32px', fill: '#FFF' });
 
         let cursors = this.input.keyboard.createCursorKeys(),
             player  = this.physics.add.sprite(game.canvas.width / 2, game.canvas.height / 2, 'player'),
@@ -34,7 +35,7 @@ export class PlayGame extends Phaser.Scene {
 
         this.enemies = this.physics.add.group({
             key               : 'enemy',
-            repeat            : 5,
+            repeat            : 6,
             collideWorldBounds: true,
             immovable         : true
         });
@@ -73,7 +74,11 @@ export class PlayGame extends Phaser.Scene {
                 currentEnemy.setVisible(true);
                 currentEnemy.body.enable = true;
                 currentEnemy.setPosition(this.player.x + 16, this.player.y + 16);
+                currentEnemy.data.values.dropped = true;
                 this.heldText.setText(`held: ${this.enemiesHeld.length}`);
+                if (this.checkWin()) {
+                    alert('WINNER')
+                };
             }
         });
 
@@ -89,6 +94,8 @@ export class PlayGame extends Phaser.Scene {
                 enemy.active            = false;
                 enemy.body.enable       = false;
                 enemy.data.values.roped = true;
+                enemy.data.values.dropped = false;
+                enemy.setVelocity(0, 0);
                 enemy.setTexture('enemyRoped');
                 this.enemiesHeld.push(enemy);
                 this.heldText.setText(`held: ${this.enemiesHeld.length}`);
@@ -97,6 +104,8 @@ export class PlayGame extends Phaser.Scene {
 
         //enemy movement
         this.time.addEvent({ delay: 2000, callback: this.moveEnemies, callbackScope: this, loop: true });
+
+        this.levelTimer = this.time.delayedCall(constants.levelTime * 1000, this.levelTimeUp, [], this);
 
     }
 
@@ -128,6 +137,8 @@ export class PlayGame extends Phaser.Scene {
         else {
             this.player.setVelocity(0, 0);
         }
+
+        this.timeRemainingText.setText('Time: ' + (constants.levelTime - this.levelTimer.getElapsedSeconds()).toString().substr(0, 4));
     }
 
     moveEnemies() {
@@ -136,5 +147,19 @@ export class PlayGame extends Phaser.Scene {
                 child.setVelocity((Math.floor(Math.random() * 100)) * (Math.round(Math.random()) * 2 - 1), (Math.floor(Math.random() * 100)) * (Math.round(Math.random()) * 2 - 1));
             }
         })
+    }
+
+    levelTimeUp() {
+        alert('TIME UP');
+    }
+
+    checkWin() {
+        let win = true;
+        this.enemies.children.iterate((child) => {
+            if (!child.data.values.dropped) {
+                win = false;
+            }
+        })
+        return win;
     }
 }
