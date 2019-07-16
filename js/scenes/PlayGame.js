@@ -41,7 +41,7 @@ export class PlayGame extends Phaser.Scene {
         });
 
         this.enemies.children.iterate((child) => {
-            child.setData({ roped: false, dropped: false });
+            child.setData({ roped: false, dropped: false, ropedTimer: this.time.addEvent({delay: 5000, callback: this.ropeTimeout(child), callbackScope: this, paused: true}) });
             child.setPosition(Math.floor(Math.random() * 401), Math.floor(Math.random() * 401));
         })
 
@@ -75,6 +75,7 @@ export class PlayGame extends Phaser.Scene {
                 currentEnemy.body.enable = true;
                 currentEnemy.setPosition(this.player.x + 16, this.player.y + 16);
                 currentEnemy.data.values.dropped = true;
+                currentEnemy.data.values.ropedTimer.paused = false;
                 this.heldText.setText(`held: ${this.enemiesHeld.length}`);
                 if (this.checkWin()) {
                     alert('WINNER')
@@ -161,5 +162,9 @@ export class PlayGame extends Phaser.Scene {
             }
         })
         return win;
+    }
+
+    ropeTimeout(enemy) {
+        debugger;
     }
 }
