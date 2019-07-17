@@ -4,8 +4,8 @@ export class PlayGame extends Phaser.Scene {
     constructor() { super('PlayGame'); }
 
     preload() {
-        this.load.image('player', 'assets/sprites/player.png');
-        this.load.image('enemy', 'assets/sprites/enemy.png');
+        this.load.spritesheet('player', 'assets/sprites/cowboy.png', { frameWidth: 24, frameHeight: 24 });
+        this.load.spritesheet('enemy', 'assets/sprites/cows.png', { frameWidth: 24, frameHeight: 24 });
         this.load.image('enemyRoped', 'assets/sprites/enemyRoped.png');
         this.load.image('rope', 'assets/sprites/rope.png');
     }
@@ -27,6 +27,65 @@ export class PlayGame extends Phaser.Scene {
         for (let key in objects) {
             objects[key].setCollideWorldBounds(true);
         }
+
+        //PLAYER ANIMS
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('player', { start: 6, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('player', { start: 9, end: 11 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+
+        //COW ANIMS
+        this.anims.create({
+            key: 'cowLeft',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'cowDown',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 3, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'cowUp',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'cowRight',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 9, end: 11 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
         this.cursors = cursors;
         this.player  = player;
@@ -116,36 +175,61 @@ export class PlayGame extends Phaser.Scene {
             this.playerDirection = 'left';
             this.rope.setPosition(this.player.x - 40, this.player.y);
             this.rope.setAngle(0);
+            this.player.anims.play('left', true);
         }
         else if (this.cursors.right.isDown) {
             this.player.setVelocityX(constants.playerSpeed);
             this.playerDirection = 'right';
             this.rope.setPosition(this.player.x + 40, this.player.y);
             this.rope.setAngle(0);
+            this.player.anims.play('right', true);
         }
         else if (this.cursors.up.isDown) {
             this.player.setVelocityY(-constants.playerSpeed);
             this.playerDirection = 'up';
             this.rope.setPosition(this.player.x, this.player.y - 40);
             this.rope.setAngle(90);
+            this.player.anims.play('up', true);
         }
         else if (this.cursors.down.isDown) {
             this.player.setVelocityY(constants.playerSpeed);
             this.playerDirection = 'down';
             this.rope.setPosition(this.player.x, this.player.y + 40);
             this.rope.setAngle(90);
+            this.player.anims.play('down', true);
         }
         else {
             this.player.setVelocity(0, 0);
+            this.player.anims.stop();
         }
 
         this.timeRemainingText.setText('Time: ' + (constants.levelTime - this.levelTimer.getElapsedSeconds()).toString().substr(0, 4));
     }
 
     moveEnemies() {
-        this.enemies.children.iterate((child) => {
+        this.enemies.children.iterate((child) => { 
             if (child.data.values.roped == false && child.data.values.dropped == false) {
-                child.setVelocity((Math.floor(Math.random() * 100)) * (Math.round(Math.random()) * 2 - 1), (Math.floor(Math.random() * 100)) * (Math.round(Math.random()) * 2 - 1));
+                let rand = Math.round(Math.random());
+                if (rand == 0) {
+                    child.setVelocityX((Math.floor(Math.random() * 100)) * (Math.round(Math.random()) * 2 - 1));
+                    child.setVelocityY(0);
+                    if(child.body.velocity.x > 0) {
+                        child.anims.play('cowRight', true);
+                    }
+                    else {
+                        child.anims.play('cowLeft', true);
+                    }
+                }
+                else {
+                    child.setVelocityY((Math.floor(Math.random() * 100)) * (Math.round(Math.random()) * 2 - 1));
+                    child.setVelocityX(0);
+                    if(child.body.velocity.y > 0) {
+                        child.anims.play('cowDown', true);
+                    }
+                    else {
+                        child.anims.play('cowUp', true);
+                    }
+                }  
             }
         })
     }
