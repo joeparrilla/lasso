@@ -187,7 +187,7 @@ export class PlayGame extends Phaser.Scene {
             this.rope.setAngle(0);
             this.player.anims.play('right', true);
         }
-        else if (this.cursors.up.isDown) {
+        if (this.cursors.up.isDown) {
             this.player.setVelocityY(-constants.playerSpeed);
             this.playerDirection = 'up';
             this.rope.setPosition(this.player.x, this.player.y - 40);
@@ -201,7 +201,7 @@ export class PlayGame extends Phaser.Scene {
             this.rope.setAngle(90);
             this.player.anims.play('down', true);
         }
-        else {
+        if(!this.cursors.down.isDown && !this.cursors.up.isDown && !this.cursors.left.isDown && !this.cursors.right.isDown) {
             this.player.setVelocity(0, 0);
             this.player.anims.stop();
         }
