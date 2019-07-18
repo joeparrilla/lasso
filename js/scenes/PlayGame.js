@@ -100,7 +100,7 @@ export class PlayGame extends Phaser.Scene {
         });
 
         this.enemies.children.iterate((child) => {
-            child.setData({ roped: false, dropped: false, ropedTimer: this.time.addEvent({delay: 10000, callback: this.ropeTimeout, args: [child], callbackScope: this, paused: true, loop: true}) });
+            child.setData({ roped: false, dropped: false, ropedTimer: this.time.addEvent({delay: 10000, callback: this.ropeTimeout, args: [child], callbackScope: this, paused: true}) });
             child.setPosition(Math.floor(Math.random() * 401), Math.floor(Math.random() * 401));
         })
 
@@ -157,8 +157,11 @@ export class PlayGame extends Phaser.Scene {
                 enemy.data.values.dropped = false;
                 enemy.setVelocity(0, 0);
                 enemy.setTexture('enemyRoped');
+                enemy.anims.stop();
                 this.enemiesHeld.push(enemy);
                 this.heldText.setText(`held: ${this.enemiesHeld.length}`);
+                enemy.data.values.ropedTimer.remove();
+                enemy.data.values.ropedTimer = this.time.addEvent({delay: 10000, callback: this.ropeTimeout, args: [enemy], callbackScope: this, paused: true});
             }
         }, null, this);
 
