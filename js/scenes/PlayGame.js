@@ -21,7 +21,7 @@ export class PlayGame extends Phaser.Scene {
         //background
         this.add.image(400, 400, 'background');
         this.buildings = this.physics.add.staticGroup();
-        this.buildings.create(400, 400, 'buildings')
+        this.buildings.create(400, 400, 'buildings');
 
         
 
