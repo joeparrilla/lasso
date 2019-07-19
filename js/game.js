@@ -3,8 +3,8 @@ import {PlayGame} from './scenes/PlayGame.js';
 ///////////////////////////////////////////////////////////////// instantiation
 var config = {
     type   : Phaser.AUTO,
-    width  : 768,
-    height : 600,
+    width  : 800,
+    height : 800,
     physics: {
         default: 'arcade',
         arcade : {

@@ -8,6 +8,8 @@ export class PlayGame extends Phaser.Scene {
         this.load.spritesheet('enemy', 'assets/sprites/cows.png', { frameWidth: 24, frameHeight: 24 });
         this.load.image('enemyRoped', 'assets/sprites/enemyRoped.png');
         this.load.image('rope', 'assets/sprites/rope.png');
+        this.load.image('background', 'assets/sprites/background.png');
+        this.load.image('buildings', 'assets/sprites/buildings.png');
     }
 
     create() {
@@ -15,6 +17,13 @@ export class PlayGame extends Phaser.Scene {
         this.playerDirection = 'up'
         this.maxEnemiesHeld  = 2;
         this.enemiesHeld     = [];
+
+        //background
+        this.add.image(400, 400, 'background');
+        this.buildings = this.physics.add.staticGroup();
+        this.buildings.create(400, 400, 'buildings')
+
+        
 
         //text
         this.heldText = this.add.text(16, 16, `held: ${this.enemiesHeld.length}`, { fontSize: '32px', fill: '#FFF' });
@@ -98,6 +107,8 @@ export class PlayGame extends Phaser.Scene {
             collideWorldBounds: true,
             immovable         : true
         });
+
+        this.physics.add.collider(this.player, this.buildings);
 
         this.enemies.children.iterate((child) => {
             child.setData({ roped: false, dropped: false, ropedTimer: this.time.addEvent({delay: 10000, callback: this.ropeTimeout, args: [child], callbackScope: this, paused: true}) });
