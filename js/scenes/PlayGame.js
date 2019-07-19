@@ -6,10 +6,10 @@ export class PlayGame extends Phaser.Scene {
     preload() {
         this.load.spritesheet('player', 'assets/sprites/cowboy.png', { frameWidth: 24, frameHeight: 24 });
         this.load.spritesheet('enemy', 'assets/sprites/cows.png', { frameWidth: 24, frameHeight: 24 });
+        this.load.spritesheet('buildings', 'assets/sprites/buildings.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('enemyRoped', 'assets/sprites/enemyRoped.png');
         this.load.image('rope', 'assets/sprites/rope.png');
         this.load.image('background', 'assets/sprites/background.png');
-        this.load.image('buildings', 'assets/sprites/buildings.png');
     }
 
     create() {
@@ -20,10 +20,8 @@ export class PlayGame extends Phaser.Scene {
 
         //background
         this.add.image(400, 400, 'background');
-        this.buildings = this.physics.add.staticGroup();
-        this.buildings.create(400, 400, 'buildings');
-
-        
+        this.buildings = [];
+        this.buildings.push(this.physics.add.staticImage(100, 100, 'buildings', 0));
 
         //text
         this.heldText = this.add.text(16, 16, `held: ${this.enemiesHeld.length}`, { fontSize: '32px', fill: '#FFF' });
@@ -37,64 +35,7 @@ export class PlayGame extends Phaser.Scene {
             objects[key].setCollideWorldBounds(true);
         }
 
-        //PLAYER ANIMS
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        
-        this.anims.create({
-            key: 'down',
-            frames: this.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        
-        this.anims.create({
-            key: 'up',
-            frames: this.anims.generateFrameNumbers('player', { start: 6, end: 8 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('player', { start: 9, end: 11 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-
-        //COW ANIMS
-        this.anims.create({
-            key: 'cowLeft',
-            frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        
-        this.anims.create({
-            key: 'cowDown',
-            frames: this.anims.generateFrameNumbers('enemy', { start: 3, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        
-        this.anims.create({
-            key: 'cowUp',
-            frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'cowRight',
-            frames: this.anims.generateFrameNumbers('enemy', { start: 9, end: 11 }),
-            frameRate: 10,
-            repeat: -1
-        });
+        this.createAnimations();
 
         this.cursors = cursors;
         this.player  = player;
@@ -109,6 +50,7 @@ export class PlayGame extends Phaser.Scene {
         });
 
         this.physics.add.collider(this.player, this.buildings);
+        this.physics.add.collider(this.enemies, this.buildings);
 
         this.enemies.children.iterate((child) => {
             child.setData({ roped: false, dropped: false, ropedTimer: this.time.addEvent({delay: 10000, callback: this.ropeTimeout, args: [child], callbackScope: this, paused: true}) });
@@ -181,6 +123,10 @@ export class PlayGame extends Phaser.Scene {
 
         this.levelTimer = this.time.delayedCall(constants.levelTime * 1000, this.levelTimeUp, [], this);
 
+        //colliders
+        this.physics.add.collider(this.player, this.buildings);
+        this.physics.add.collider(this.enemies, this.buildings);
+
     }
 
     update() {
@@ -220,6 +166,7 @@ export class PlayGame extends Phaser.Scene {
         this.timeRemainingText.setText('Time: ' + (constants.levelTime - this.levelTimer.getElapsedSeconds()).toString().substr(0, 4));
     }
 
+    //Loops and moves all cows
     moveEnemies() {
         this.enemies.children.iterate((child) => { 
             if (child.data.values.roped == false && child.data.values.dropped == false) {
@@ -248,10 +195,12 @@ export class PlayGame extends Phaser.Scene {
         })
     }
 
+    //Game over scenario when timer is up
     levelTimeUp() {
         alert('TIME UP');
     }
 
+    //Checks for the win condition
     checkWin() {
         let win = true;
         this.enemies.children.iterate((child) => {
@@ -262,10 +211,73 @@ export class PlayGame extends Phaser.Scene {
         return win;
     }
 
+    //Callback for for when the roped cow escapes
     ropeTimeout(enemy) {
         enemy.setTexture('enemy');
         enemy.data.values.roped = false;
         enemy.data.values.dropped = false;
         enemy.data.values.ropedTimer.paused = true;
+    }
+
+    //Creates animations for the player and cows from sprite sheets
+    createAnimations() {
+        //PLAYER ANIMS
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('player', { start: 6, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('player', { start: 9, end: 11 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+
+        //COW ANIMS
+        this.anims.create({
+            key: 'cowLeft',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'cowDown',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 3, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'cowUp',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'cowRight',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 9, end: 11 }),
+            frameRate: 10,
+            repeat: -1
+        });
     }
 }
