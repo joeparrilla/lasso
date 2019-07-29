@@ -1,25 +1,23 @@
 {
   "name": "lasso",
   "version": "1.0.0",
-  "description": "breakout clone",
-  "main": "index.js",
-  "dependencies": {
-    "parcel-bundler": "^1.12.3"
-  },
-  "devDependencies": {},
+  "description": "Lasso Game",
+  "main": "js/game.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/joeparrilla/lasso.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/joeparrilla/lasso/issues"
   },
-  "homepage": "https://github.com/joeparrilla/lasso#readme"
+  "homepage": "https://github.com/joeparrilla/lasso#readme",
+  "devDependencies": {
+    "cssnano": "^4.1.10"
+  }
 }
