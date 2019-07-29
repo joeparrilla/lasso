@@ -1,0 +1,19 @@
+{
+  "name": "lasso",
+  "version": "1.0.0",
+  "description": "lasso game",
+  "main": "js/game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joeparrilla/lasso.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joeparrilla/lasso/issues"
+  },
+  "homepage": "https://github.com/joeparrilla/lasso#readme"
+}
