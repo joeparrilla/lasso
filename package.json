@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/joeparrilla/lasso/issues"
   },
-  "homepage": "https://github.com/joeparrilla/lasso#readme"
+  "homepage": "https://github.com/joeparrilla/lasso#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "engines": {
+    "node": "10.16.0"
+  }
+  
 }
