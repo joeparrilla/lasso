@@ -1,8 +1,12 @@
 {
   "name": "lasso",
   "version": "1.0.0",
-  "description": "lasso game",
+  "description": "breakout clone",
   "main": "index.js",
+  "dependencies": {
+    "parcel-bundler": "^1.12.3"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
@@ -11,6 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/joeparrilla/lasso.git"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
