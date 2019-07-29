@@ -14,7 +14,7 @@ export class PlayGame extends Phaser.Scene {
 
     create() {
 
-        this.playerDirection = 'up'
+        this.playerDirection = {up: true, down: false, left: false, right: false};
         this.maxEnemiesHeld  = 2;
         this.enemiesHeld     = [];
 
@@ -132,35 +132,54 @@ export class PlayGame extends Phaser.Scene {
     update() {
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-constants.playerSpeed);
-            this.playerDirection = 'left';
-            this.rope.setPosition(this.player.x - 40, this.player.y);
-            this.rope.setAngle(0);
+            this.playerDirection.left = true;
+            this.rope.setPosition(this.player.x - 35, this.player.y);
+            this.rope.setAngle(90);
             this.player.anims.play('left', true);
         }
         else if (this.cursors.right.isDown) {
             this.player.setVelocityX(constants.playerSpeed);
-            this.playerDirection = 'right';
-            this.rope.setPosition(this.player.x + 40, this.player.y);
-            this.rope.setAngle(0);
+            this.playerDirection.right = true;
+            this.rope.setPosition(this.player.x + 35, this.player.y);
+            this.rope.setAngle(90);
             this.player.anims.play('right', true);
         }
         if (this.cursors.up.isDown) {
             this.player.setVelocityY(-constants.playerSpeed);
-            this.playerDirection = 'up';
+            this.playerDirection.up = true;
             this.rope.setPosition(this.player.x, this.player.y - 40);
-            this.rope.setAngle(90);
+            this.rope.setAngle(0);
             this.player.anims.play('up', true);
         }
         else if (this.cursors.down.isDown) {
             this.player.setVelocityY(constants.playerSpeed);
-            this.playerDirection = 'down';
+            this.playerDirection.down = true;
             this.rope.setPosition(this.player.x, this.player.y + 40);
-            this.rope.setAngle(90);
+            this.rope.setAngle(0);
             this.player.anims.play('down', true);
         }
         if(!this.cursors.down.isDown && !this.cursors.up.isDown && !this.cursors.left.isDown && !this.cursors.right.isDown) {
             this.player.setVelocity(0, 0);
             this.player.anims.stop();
+            this.playerDirection.up = this.playerDirection.down = this.playerDirection.left = this.playerDirection.right = false;
+        }
+
+
+        if(this.playerDirection.up && this.playerDirection.right) {
+            this.rope.setPosition(this.player.x + 30, this.player.y - 30);
+            this.rope.setAngle(45);
+        }
+        else if(this.playerDirection.up && this.playerDirection.left) {
+            this.rope.setPosition(this.player.x - 30, this.player.y - 30);
+            this.rope.setAngle(-45);
+        }
+        else if(this.playerDirection.down && this.playerDirection.right) {
+            this.rope.setPosition(this.player.x + 30, this.player.y + 30);
+            this.rope.setAngle(-45);
+        }
+        else if(this.playerDirection.down && this.playerDirection.left) {
+            this.rope.setPosition(this.player.x - 30, this.player.y + 30);
+            this.rope.setAngle(45);
         }
 
         this.timeRemainingText.setText('Time: ' + (constants.levelTime - this.levelTimer.getElapsedSeconds()).toString().substr(0, 4));
