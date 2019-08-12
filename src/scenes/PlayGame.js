@@ -1,4 +1,4 @@
-import { constants } from '../constants.js'
+import { constants } from '../constants.js/index.js'
 
 export class PlayGame extends Phaser.Scene {
     constructor() { super('PlayGame'); }

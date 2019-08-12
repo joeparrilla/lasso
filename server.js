@@ -1,20 +1,16 @@
-const fs = require('fs');
-const http = require('http');
+var path = require('path');
+var express = require('express');
 
-const html = fs.readFileSync('index.html');
-const js = fs.readFileSync('js/game.js');
+var app = express();
 
-const server = http.createServer((request, response) => {
+app.use(express.static(path.join(__dirname, '/src/assets')));
+app.use(express.static(path.join(__dirname, '/dist')));
+app.set('port', process.env.PORT || 8080);
 
-    if (request.url === '/') {
-        response.writeHead(200, { 'content-type': 'text/html' });
-        response.end(html);
-    }
-
-    if (request.url === '/game') {
-        response.writeHead(200, { 'content-type': 'application/javascript' });
-        response.end(js);
-    }
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/dist/index.html');
 });
 
-server.listen(7000);
+var server = app.listen(app.get('port'), function() {
+  console.log('listening on port ', server.address().port);
+});

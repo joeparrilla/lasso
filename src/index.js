@@ -1,4 +1,4 @@
-import {PlayGame} from './scenes/PlayGame.js';
+import {PlayGame} from '../src/scenes/PlayGame.js.js';
  
 ///////////////////////////////////////////////////////////////// instantiation
 var config = {

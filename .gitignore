@@ -1,6 +1,14 @@
-/node_modules
-npm-debug.log
+# System and IDE files
+Thumbs.db
 .DS_Store
-/*.env
-.cache
-dist
+.idea
+*.suo
+*.sublime-project
+*.sublime-workspace
+
+# Vendors
+node_modules/
+
+# Build
+dist/
+/npm-debug.log
